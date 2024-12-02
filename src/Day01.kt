@@ -1,21 +1,37 @@
+import kotlin.math.abs
+
 fun main() {
     fun part1(input: List<String>): Int {
-        return input.size
+        val (leftList, rightList) = getLeftAndRight(input)
+        val sortedLeft = leftList.sorted()
+        val sortedRight = rightList.sorted()
+
+        val totalDistance = sortedLeft.zip(sortedRight){ left, right -> abs(left - right) }.sum()
+
+        return totalDistance
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        val (leftList, rightList) = getLeftAndRight(input)
+        val leftListCount = leftList.map { l ->
+            rightList.count { it == l }
+        }
+        val similarityScore = leftList.zip(leftListCount) { left, count -> left * count }.sum()
+
+        return similarityScore
     }
 
-    // Test if implementation meets criteria from the description, like:
-    check(part1(listOf("test_input")) == 1)
+    println(part1(readInput("Day01")))
+    println(part2(readInput("Day01")))
+}
 
-    // Or read a large test input from the `src/Day01_test.txt` file:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
-
-    // Read the input from the `src/Day01.txt` file.
-    val input = readInput("Day01")
-    part1(input).println()
-    part2(input).println()
+fun getLeftAndRight(input: List<String>): Pair<List<Int>, List<Int>> {
+    val leftList = mutableListOf<Int>()
+    val rightList = mutableListOf<Int>()
+    input.forEach {
+        val pair = it.split(" ").filter{ it.isNotEmpty() }
+        leftList.add((pair.first().toInt()))
+        rightList.add((pair.last().toInt()))
+    }
+    return leftList.toList() to rightList.toList()
 }
