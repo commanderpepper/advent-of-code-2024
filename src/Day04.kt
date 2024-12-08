@@ -15,7 +15,7 @@ fun main(){
     }
 
     fun part2(input:List<String>):Int{
-        return 0
+        return checkForMas(input)
     }
 
     val input = readInput("Day04")
@@ -44,6 +44,22 @@ fun checkNextFourLetters(
                 y = yMovement(y)
             }
             if(word.all { it != null } && condition(word.joinToString(""))) { count ++ }
+        }
+    }
+
+    return count
+}
+
+fun checkForMas(wordSearch: List<String>): Int {
+    var count = 0
+
+    wordSearch.forEachIndexed { row, line ->
+        line.forEachIndexed { col, character ->
+            if(character == 'A'){
+                val rightDiagonal = "${wordSearch.getOrNull(row - 1)?.getOrNull(col + 1)}$character${wordSearch.getOrNull(row + 1)?.getOrNull(col - 1)}"
+                val leftDiagonal = "${wordSearch.getOrNull(row - 1)?.getOrNull(col - 1)}$character${wordSearch.getOrNull(row + 1)?.getOrNull(col + 1)}"
+                if((rightDiagonal == "MAS" || rightDiagonal == "SAM") && (leftDiagonal == "MAS" || leftDiagonal == "SAM")) { count ++ }
+            }
         }
     }
 
